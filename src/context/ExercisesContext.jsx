@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import NetInfo from '@react-native-community/netinfo';
-import { fetchExercises, addFavorite, removeFavorite } from '../services/api';
+import { fetchExercises, addFavorite, removeFavorite, getFavorites } from '../services/api';
 import { cacheExercises, getCachedExercises, cacheFavorites, getCachedFavorites } from '../storage/asyncStorage';
 
 const ExercisesContext = createContext();
@@ -27,11 +27,29 @@ function reducer(state, action) {
 export const ExercisesProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    // Monitor network
+    // Monitor network and load initial data
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(({ isConnected }) => {
             dispatch({ type: 'SET_ONLINE', payload: isConnected });
         });
+
+        const initializeData = async () => {
+            // Load from cache first for speed
+            const [cachedExercises, cachedFavorites] = await Promise.all([
+                getCachedExercises(),
+                getCachedFavorites()
+            ]);
+
+            if (cachedExercises?.length) dispatch({ type: 'SET_EXERCISES', payload: cachedExercises });
+            if (cachedFavorites?.length) dispatch({ type: 'SET_FAVORITES', payload: cachedFavorites });
+
+            // Then refresh from API
+            loadExercises();
+            loadFavorites();
+        };
+
+        initializeData();
+
         return unsubscribe;
     }, []);
 
@@ -44,13 +62,25 @@ export const ExercisesProvider = ({ children }) => {
                 await cacheExercises(data);
             } else {
                 const cached = await getCachedExercises();
-                dispatch({ type: 'SET_EXERCISES', payload: cached });
+                dispatch({ type: 'SET_EXERCISES', payload: cached || [] });
             }
         } catch (err) {
-            // Fallback to cache on error
+            console.error("[ExercisesContext] Error loading exercises:", err.message);
             const cached = await getCachedExercises();
-            dispatch({ type: 'SET_EXERCISES', payload: cached });
+            dispatch({ type: 'SET_EXERCISES', payload: cached || [] });
             dispatch({ type: 'SET_ERROR', payload: err.message });
+        }
+    };
+
+    const loadFavorites = async () => {
+        try {
+            if (state.isOnline) {
+                const data = await getFavorites();
+                dispatch({ type: 'SET_FAVORITES', payload: data });
+                await cacheFavorites(data);
+            }
+        } catch (err) {
+            console.error("[ExercisesContext] Error loading favorites:", err.message);
         }
     };
 

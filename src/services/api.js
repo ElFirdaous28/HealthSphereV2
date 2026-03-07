@@ -1,38 +1,58 @@
-// change this to your machine's IP if testing on a real device
-const BASE_URL = 'http://localhost:3001';
+import axios from 'axios';
+import { Platform } from 'react-native';
+
+// Use localhost for web, and the network IP for real devices
+// Note: json-server runs on port 3001, not the Expo port (8082)
+const devIp = '192.168.1.99';
+const BASE_URL = Platform.OS === 'web'
+    ? 'http://127.0.0.1:3001'
+    : (process.env.API_URL || `http://${devIp}:3001`);
+
+const api = axios.create({
+    baseURL: BASE_URL,
+});
 
 export const fetchExercises = async () => {
-    const response = await fetch(`${BASE_URL}/exercises`);
-    console.log("response data",response);
-    if (!response.ok) throw new Error('Failed to fetch exercises');
-    return response.json();
+    try {
+        const response = await api.get('/exercises');
+
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to fetch exercises');
+    }
 };
 
 export const fetchExerciseById = async (id) => {
-    const response = await fetch(`${BASE_URL}/exercises/${id}`);
-    if (!response.ok) throw new Error('Exercise not found');
-    return response.json();
+    try {
+        const response = await api.get(`/exercises/${id}`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Exercise not found');
+    }
 };
 
 export const addFavorite = async (exercise) => {
-    const response = await fetch(`${BASE_URL}/favorites`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(exercise),
-    });
-    if (!response.ok) throw new Error('Failed to add favorite');
-    return response.json();
+    try {
+        const response = await api.post('/favorites', exercise);
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to add favorite');
+    }
 };
 
 export const getFavorites = async () => {
-    const response = await fetch(`${BASE_URL}/favorites`);
-    if (!response.ok) throw new Error('Failed to fetch favorites');
-    return response.json();
+    try {
+        const response = await api.get('/favorites');
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to fetch favorites');
+    }
 };
 
 export const removeFavorite = async (id) => {
-    const response = await fetch(`${BASE_URL}/favorites/${id}`, {
-        method: 'DELETE',
-    });
-    if (!response.ok) throw new Error('Failed to remove favorite');
+    try {
+        await api.delete(`/favorites/${id}`);
+    } catch (error) {
+        throw new Error('Failed to remove favorite');
+    }
 };

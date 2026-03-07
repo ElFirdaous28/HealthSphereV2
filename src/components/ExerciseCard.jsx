@@ -1,8 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const ExerciseCard = ({ exercise, isFavorite, onToggleFavorite }) => {
+    const getDifficultyColor = (level) => {
+        switch (level?.toLowerCase()) {
+            case 'beginner': return '#2ECC71';
+            case 'intermediate': return '#3498DB';
+            case 'advanced': return '#E74C3C';
+            default: return '#95A5A6';
+        }
+    };
+
+    const getDifficultyBg = (level) => {
+        switch (level?.toLowerCase()) {
+            case 'beginner': return '#E8F8F5';
+            case 'intermediate': return '#EBF5FB';
+            case 'advanced': return '#FDEDEC';
+            default: return '#F2F4F4';
+        }
+    };
+
     const getCategoryIcon = (category) => {
         switch (category) {
             case 'Strength': return 'dumbbell';
@@ -12,41 +30,55 @@ const ExerciseCard = ({ exercise, isFavorite, onToggleFavorite }) => {
         }
     };
 
-    const getDifficultyColor = (level) => {
-        switch (level) {
-            case 'Beginner': return '#4CAF50';
-            case 'Intermediate': return '#FF9800';
-            case 'Advanced': return '#F44336';
-            default: return '#757575';
+    const getCategoryBg = (category) => {
+        switch (category) {
+            case 'Strength': return '#F0F4FF';
+            case 'Core': return '#FFF3E0';
+            case 'Cardio': return '#FCE4EC';
+            default: return '#F3F4F6';
+        }
+    };
+
+    const getCategoryColor = (category) => {
+        switch (category) {
+            case 'Strength': return '#4A90E2';
+            case 'Core': return '#FF9800';
+            case 'Cardio': return '#E91E63';
+            default: return '#6B7280';
         }
     };
 
     return (
         <View style={styles.card}>
-            <View style={[styles.cardIconContainer, { backgroundColor: '#F0F4FF' }]}>
-                <MaterialCommunityIcons name={getCategoryIcon(exercise.category)} size={32} color="#4A90E2" />
+            <View style={[styles.iconContainer, { backgroundColor: getCategoryBg(exercise.category) }]}>
+                <MaterialCommunityIcons
+                    name={getCategoryIcon(exercise.category)}
+                    size={40}
+                    color={getCategoryColor(exercise.category)}
+                />
             </View>
 
             <View style={styles.cardContent}>
                 <View style={styles.cardHeader}>
-                    <Text style={styles.exerciseName}>{exercise.name}</Text>
-                    <TouchableOpacity onPress={() => onToggleFavorite(exercise)}>
+                    <Text style={styles.exerciseName} numberOfLines={2}>{exercise.name}</Text>
+                    <TouchableOpacity onPress={() => onToggleFavorite(exercise)} style={styles.favoriteButton}>
                         <MaterialCommunityIcons
-                            name={isFavorite ? "heart" : "heart-outline"}
-                            size={24}
-                            color={isFavorite ? "#E91E63" : "#BDBDBD"}
+                            name={isFavorite ? "heart" : "heart"}
+                            size={22}
+                            color={isFavorite ? "#9B59B6" : "#D1D5DB"}
                         />
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.badgeContainer}>
-                    <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyColor(exercise.difficulty) + '15' }]}>
+                <View style={styles.footer}>
+                    <View style={[styles.difficultyBadge, { backgroundColor: getDifficultyBg(exercise.difficulty) }]}>
                         <Text style={[styles.difficultyText, { color: getDifficultyColor(exercise.difficulty) }]}>
-                            {exercise.difficulty.toUpperCase()}
+                            {exercise.difficulty?.toUpperCase()}
                         </Text>
                     </View>
+
                     <View style={styles.durationContainer}>
-                        <MaterialCommunityIcons name="clock-outline" size={14} color="#9E9E9E" />
+                        <MaterialCommunityIcons name="clock-outline" size={16} color="#9CA3AF" />
                         <Text style={styles.durationText}>{exercise.duration} mins</Text>
                     </View>
                 </View>
@@ -59,28 +91,30 @@ const styles = StyleSheet.create({
     card: {
         flexDirection: 'row',
         backgroundColor: '#FFFFFF',
-        borderRadius: 20,
+        borderRadius: 24,
         padding: 12,
         marginBottom: 16,
-        // Shadow for iOS
+        alignItems: 'center',
+        // Shadow
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.05,
-        shadowRadius: 10,
-        // Elevation for Android
-        elevation: 4,
+        shadowRadius: 12,
+        elevation: 3,
     },
-    cardIconContainer: {
+    iconContainer: {
         width: 100,
         height: 100,
-        borderRadius: 16,
+        borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
     },
     cardContent: {
         flex: 1,
         marginLeft: 16,
-        justifyContent: 'center',
+        height: 100,
+        justifyContent: 'space-between',
+        paddingVertical: 4,
     },
     cardHeader: {
         flexDirection: 'row',
@@ -88,22 +122,25 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     exerciseName: {
-        fontSize: 18,
+        fontSize: 17,
         fontWeight: '700',
-        color: '#1A1A1A',
+        color: '#111827',
         flex: 1,
         marginRight: 8,
+        lineHeight: 22,
     },
-    badgeContainer: {
+    favoriteButton: {
+        padding: 4,
+    },
+    footer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 12,
+        justifyContent: 'space-between',
     },
     difficultyBadge: {
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 6,
-        marginRight: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderRadius: 10,
     },
     difficultyText: {
         fontSize: 11,
@@ -116,7 +153,7 @@ const styles = StyleSheet.create({
     },
     durationText: {
         fontSize: 13,
-        color: '#9E9E9E',
+        color: '#6B7280',
         fontWeight: '600',
         marginLeft: 4,
     },

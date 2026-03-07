@@ -17,12 +17,11 @@ import { useExercises } from '../context/ExercisesContext';
 import ExerciseCard from '../components/ExerciseCard';
 
 const CATEGORIES = [
-    { id: 'all', name: 'All', icon: 'apps' },
-    { id: 'Strength', name: 'Strength', icon: 'dumbbell' },
-    { id: 'Core', name: 'Core', icon: 'shield-check' },
-    { id: 'Cardio', name: 'Cardio', icon: 'heart-pulse' },
+    { id: 'all', name: 'All' },
+    { id: 'Strength', name: 'Strength' },
+    { id: 'Core', name: 'Core' },
+    { id: 'Cardio', name: 'Cardio' },
 ];
-
 
 const ExercisesScreen = ({ navigation }) => {
     const { state, loadExercises, toggleFavorite } = useExercises();
@@ -41,17 +40,77 @@ const ExercisesScreen = ({ navigation }) => {
     };
 
     const filteredExercises = useMemo(() => {
+        if (!state.exercises) return [];
         return state.exercises.filter(exercise => {
-            const matchesSearch = exercise.name.toLowerCase().includes(searchQuery.toLowerCase());
-            const matchesCategory = selectedCategory === 'all' || exercise.category === selectedCategory;
+            const exerciseName = (exercise.name || '').toLowerCase();
+            const searchTerms = searchQuery.toLowerCase().trim();
+            const matchesSearch = exerciseName.includes(searchTerms);
+
+            const exerciseCategory = exercise.category || '';
+            const matchesCategory = selectedCategory === 'all' || exerciseCategory === selectedCategory;
+
             return matchesSearch && matchesCategory;
         });
     }, [state.exercises, searchQuery, selectedCategory]);
 
+    const renderHeader = () => (
+        <View style={styles.listHeader}>
+            {/* Search Bar */}
+            <View style={styles.searchSection}>
+                <View style={styles.searchWrapper}>
+                    <MaterialCommunityIcons name="magnify" size={22} color="#9CA3AF" style={styles.searchIcon} />
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search exercises, muscles..."
+                        value={searchQuery}
+                        onChangeText={setSearchQuery}
+                        placeholderTextColor="#9CA3AF"
+                    />
+                    <View style={styles.divider} />
+                    <TouchableOpacity style={styles.filterBarButton}>
+                        <MaterialCommunityIcons name="tune-variant" size={20} color="#4B5563" />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* Categories */}
+            <View style={styles.categoryContainer}>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.categoryScroll}
+                >
+                    {CATEGORIES.map(cat => (
+                        <TouchableOpacity
+                            key={cat.id}
+                            onPress={() => setSelectedCategory(cat.id)}
+                            style={styles.categoryTab}
+                        >
+                            <Text style={[
+                                styles.categoryTabText,
+                                selectedCategory === cat.id && styles.activeCategoryTabText
+                            ]}>
+                                {cat.name}
+                            </Text>
+                            {selectedCategory === cat.id && <View style={styles.activeIndicator} />}
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            </View>
+        </View>
+    );
+
+    const renderEmpty = () => (
+        <View style={styles.noResults}>
+            <MaterialCommunityIcons name="alert-circle-outline" size={48} color="#D1D5DB" />
+            <Text style={styles.noResultsText}>No exercises found</Text>
+        </View>
+    );
+
     if (state.loading && state.exercises.length === 0) {
         return (
             <View style={styles.centerContainer}>
-                <ActivityIndicator size="large" color="#4A90E2" />
+                <ActivityIndicator size="large" color="#9B59B6" />
             </View>
         );
     }
@@ -60,94 +119,45 @@ const ExercisesScreen = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" />
 
-            {/* Header */}
-            <View style={styles.header}>
-                <TouchableOpacity style={styles.headerButton} onPress={() => navigation?.goBack()}>
-                    <MaterialCommunityIcons name="chevron-left" size={32} color="#1A1A1A" />
+            {/* Top Bar Navigation */}
+            <View style={styles.topNav}>
+                <TouchableOpacity
+                    style={styles.circleButton}
+                    onPress={() => navigation?.goBack()}
+                >
+                    <MaterialCommunityIcons name="chevron-left" size={28} color="#111827" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Exercise Library</Text>
-                <TouchableOpacity style={styles.headerButton}>
-                    <MaterialCommunityIcons name="dots-horizontal" size={24} color="#1A1A1A" />
+
+                <Text style={styles.topNavTitle}>Exercise Library</Text>
+
+                <TouchableOpacity style={styles.circleButton}>
+                    <MaterialCommunityIcons name="dots-horizontal" size={24} color="#111827" />
                 </TouchableOpacity>
             </View>
 
-            <ScrollView
-                keyboardShouldPersistTaps="handled"
+            <FlatList
+                data={filteredExercises}
+                renderItem={({ item }) => (
+                    <ExerciseCard
+                        exercise={item}
+                        isFavorite={state.favorites.some(f => f.id === item.id)}
+                        onToggleFavorite={toggleFavorite}
+                    />
+                )}
+                keyExtractor={item => item.id.toString()}
+                ListHeaderComponent={renderHeader}
+                ListEmptyComponent={renderEmpty}
+                contentContainerStyle={styles.listContainer}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={['#9B59B6']}
+                        tintColor="#9B59B6"
+                    />
+                }
                 showsVerticalScrollIndicator={false}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            >
-                <View style={styles.refreshIndicator}>
-                    <MaterialCommunityIcons name="chevron-double-down" size={20} color="#4A90E2" />
-                    <Text style={styles.refreshText}>PULL TO REFRESH</Text>
-                </View>
-
-                {/* Search Bar */}
-                <View style={styles.searchContainer}>
-                    <View style={styles.searchWrapper}>
-                        <MaterialCommunityIcons name="magnify" size={24} color="#BDBDBD" style={styles.searchIcon} />
-                        <TextInput
-                            style={styles.searchInput}
-                            placeholder="Search 500+ exercises..."
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                            placeholderTextColor="#BDBDBD"
-                        />
-                        <TouchableOpacity style={styles.filterButton}>
-                            <MaterialCommunityIcons name="tune-variant" size={22} color="#BDBDBD" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
-                {/* Categories */}
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.categoryScroll}
-                    style={styles.categoryContainer}
-                >
-                    {CATEGORIES.map(cat => (
-                        <TouchableOpacity
-                            key={cat.id}
-                            onPress={() => setSelectedCategory(cat.id)}
-                            style={[
-                                styles.categoryChip,
-                                selectedCategory === cat.id && styles.activeCategoryChip
-                            ]}
-                        >
-                            <MaterialCommunityIcons
-                                name={cat.icon}
-                                size={20}
-                                color={selectedCategory === cat.id ? '#FFFFFF' : '#757575'}
-                            />
-                            <Text style={[
-                                styles.categoryChipText,
-                                selectedCategory === cat.id && styles.activeCategoryChipText
-                            ]}>
-                                {cat.name}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
-
-                {/* Exercise List */}
-                <View style={styles.listContainer}>
-                    {filteredExercises.length > 0 ? (
-                        filteredExercises.map(item => (
-                            <ExerciseCard
-                                key={item.id}
-                                exercise={item}
-                                isFavorite={state.favorites.some(f => f.id === item.id)}
-                                onToggleFavorite={toggleFavorite}
-                            />
-                        ))
-                    ) : (
-                        <View style={styles.noResults}>
-                            <MaterialCommunityIcons name="alert-circle-outline" size={48} color="#BDBDBD" />
-                            <Text style={styles.noResultsText}>No exercises found</Text>
-                        </View>
-                    )}
-                </View>
-            </ScrollView>
+            />
         </SafeAreaView>
     );
 };
@@ -155,97 +165,114 @@ const ExercisesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#F9FAFB', // Light gray background for better contrast
     },
     centerContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    header: {
+    topNav: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        height: 60,
+        paddingHorizontal: 20,
+        height: 80,
+        backgroundColor: '#FFFFFF',
     },
-    headerButton: {
-        width: 40,
-        height: 40,
+    circleButton: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: '#FFFFFF',
         justifyContent: 'center',
         alignItems: 'center',
+        // Shadow for premium look
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 4,
     },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: '700',
-        color: '#1A1A1A',
+    topNavTitle: {
+        fontSize: 18,
+        fontWeight: '800',
+        color: '#111827',
     },
-    refreshIndicator: {
-        alignItems: 'center',
-        paddingVertical: 10,
+    listHeader: {
+        paddingTop: 10,
+        backgroundColor: '#FFFFFF',
+        borderBottomLeftRadius: 32,
+        borderBottomRightRadius: 32,
+        marginBottom: 20,
+        // Shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.03,
+        shadowRadius: 10,
+        elevation: 2,
     },
-    refreshText: {
-        fontSize: 10,
-        color: '#BDBDBD',
-        fontWeight: '600',
-        letterSpacing: 1.2,
-        marginTop: 4,
-    },
-    searchContainer: {
+    searchSection: {
         paddingHorizontal: 20,
-        marginTop: 10,
+        marginBottom: 20,
     },
     searchWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F7F9FF',
-        borderRadius: 16,
-        paddingHorizontal: 12,
-        height: 56,
+        backgroundColor: '#F3F4F6',
+        borderRadius: 18,
+        paddingHorizontal: 16,
+        height: 52,
     },
     searchIcon: {
-        marginRight: 8,
+        marginRight: 10,
     },
     searchInput: {
         flex: 1,
-        fontSize: 16,
-        color: '#1A1A1A',
+        fontSize: 15,
+        color: '#111827',
         fontWeight: '500',
     },
-    filterButton: {
+    divider: {
+        width: 1,
+        height: 20,
+        backgroundColor: '#D1D5DB',
+        marginHorizontal: 12,
+    },
+    filterBarButton: {
         padding: 4,
     },
     categoryContainer: {
-        maxHeight: 60,
-        marginTop: 20,
+        marginBottom: 10,
     },
     categoryScroll: {
         paddingHorizontal: 20,
     },
-    categoryChip: {
-        flexDirection: 'row',
+    categoryTab: {
+        marginRight: 30,
+        paddingVertical: 12,
         alignItems: 'center',
-        backgroundColor: '#F7F9FF',
-        paddingHorizontal: 16,
-        paddingVertical: 10,
-        borderRadius: 25,
-        marginRight: 10,
+        minWidth: 40,
     },
-    activeCategoryChip: {
-        backgroundColor: '#2ECC71',
-    },
-    categoryChipText: {
-        marginLeft: 8,
+    categoryTabText: {
         fontSize: 15,
         fontWeight: '600',
-        color: '#757575',
+        color: '#9CA3AF',
     },
-    activeCategoryChipText: {
-        color: '#FFFFFF',
+    activeCategoryTabText: {
+        color: '#111827',
+        fontWeight: '800',
+    },
+    activeIndicator: {
+        position: 'absolute',
+        bottom: 4,
+        width: 20,
+        height: 3,
+        backgroundColor: '#2ECC71',
+        borderRadius: 2,
     },
     listContainer: {
         paddingHorizontal: 20,
-        paddingTop: 20,
         paddingBottom: 40,
     },
     noResults: {
@@ -254,7 +281,7 @@ const styles = StyleSheet.create({
     },
     noResultsText: {
         fontSize: 16,
-        color: '#BDBDBD',
+        color: '#9CA3AF',
         marginTop: 12,
         fontWeight: '600',
     },
