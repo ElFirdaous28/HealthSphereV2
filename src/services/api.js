@@ -3,6 +3,7 @@ const BASE_URL = 'http://localhost:3001';
 
 export const fetchExercises = async () => {
     const response = await fetch(`${BASE_URL}/exercises`);
+    console.log("response data",response);
     if (!response.ok) throw new Error('Failed to fetch exercises');
     return response.json();
 };
