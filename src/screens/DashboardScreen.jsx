@@ -35,7 +35,7 @@ const DashboardScreen = ({ navigation }) => {
     if (userLoading || !user) {
         return (
             <View style={styles.centerContainer}>
-                <Text style={styles.loadingText}>Loading Dashboard...</Text>
+                <Text style={styles.loadingText}> Dashboard...</Text>
             </View>
         );
     }
