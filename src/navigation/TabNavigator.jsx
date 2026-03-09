@@ -1,5 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native';
 import DashboardScreen from '../screens/DashboardScreen';
 import ExercisesScreen from '../screens/ExercisesScreen';
 import HistoryScreen from '../screens/HistoryScreen';
@@ -9,8 +10,16 @@ const Tab = createBottomTabNavigator();
 export default function TabNavigator() {
     return (
         <Tab.Navigator
-            screenOptions={({ route }) => ({
+            screenOptions={({ route, navigation }) => ({
                 headerShown: true,
+                headerLeft: () => (
+                    <TouchableOpacity
+                        onPress={() => navigation.openDrawer()}
+                        style={{ marginLeft: 16 }}
+                    >
+                        <MaterialCommunityIcons name="menu" size={28} color="#333" />
+                    </TouchableOpacity>
+                ),
                 tabBarIcon: ({ color, size }) => {
                     let iconName;
                     if (route.name === 'Dashboard') {

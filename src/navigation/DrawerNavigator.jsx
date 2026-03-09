@@ -7,13 +7,6 @@ import AboutScreen from '../screens/AboutScreen';
 
 const Drawer = createDrawerNavigator();
 
-const drawerScreens = [
-    { name: 'Home', component: TabNavigator, icon: 'home' },
-    { name: 'Profile', component: ProfileScreen, icon: 'account' },
-    { name: 'Settings', component: SettingsScreen, icon: 'cog' },
-    { name: 'About', component: AboutScreen, icon: 'information' },
-];
-
 const iconMap = {
     Home: 'home',
     Profile: 'account',
@@ -34,13 +27,14 @@ export default function DrawerNavigator() {
                 ),
             })}
         >
-            {drawerScreens.map((screen) => (
-                <Drawer.Screen 
-                    key={screen.name}
-                    name={screen.name} 
-                    component={screen.component} 
-                />
-            ))}
+            <Drawer.Screen 
+                name="Home" 
+                component={TabNavigator}
+                options={{ headerShown: false }}
+            />
+            <Drawer.Screen name="Profile" component={ProfileScreen} />
+            <Drawer.Screen name="Settings" component={SettingsScreen} />
+            <Drawer.Screen name="About" component={AboutScreen} />
         </Drawer.Navigator>
     );
 }

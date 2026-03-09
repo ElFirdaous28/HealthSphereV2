@@ -30,7 +30,7 @@ export const ExercisesProvider = ({ children }) => {
     // Monitor network and load initial data
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(({ isConnected }) => {
-            dispatch({ type: 'SET_ONLINE', payload: isConnected });
+            dispatch({ type: 'SET_ONLINE', payload: Boolean(isConnected) });
         });
 
         const initializeData = async () => {
@@ -78,9 +78,14 @@ export const ExercisesProvider = ({ children }) => {
                 const data = await getFavorites();
                 dispatch({ type: 'SET_FAVORITES', payload: data });
                 await cacheFavorites(data);
+            } else {
+                const cached = await getCachedFavorites();
+                dispatch({ type: 'SET_FAVORITES', payload: cached || [] });
             }
         } catch (err) {
             console.error("[ExercisesContext] Error loading favorites:", err.message);
+            const cached = await getCachedFavorites();
+            dispatch({ type: 'SET_FAVORITES', payload: cached || [] });
         }
     };
 

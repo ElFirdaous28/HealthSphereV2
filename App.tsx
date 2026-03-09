@@ -1,13 +1,17 @@
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ExercisesProvider } from './src/context/ExercisesContext';
+import { UserProvider } from './src/context/UserContext';
 
 import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
   return (
-   
-      <ExercisesProvider>
-        <AppNavigator />
-      </ExercisesProvider>
-   
+    <SafeAreaProvider>
+      <UserProvider>
+        <ExercisesProvider>
+          <AppNavigator />
+        </ExercisesProvider>
+      </UserProvider>
+    </SafeAreaProvider>
   );
 }
