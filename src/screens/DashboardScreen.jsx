@@ -49,7 +49,7 @@ const DashboardScreen = ({ navigation }) => {
                 <View style={styles.header}>
                     <View>
                         <Text style={styles.greetingHeader}>Content de vous revoir,</Text>
-                        <Text style={styles.userNameText}>{user.name} ✨</Text>
+                        <Text style={styles.userNameText}>{user.name}</Text>
                     </View>
                     <TouchableOpacity
                         onPress={() => navigation.navigate('Profile')}
@@ -62,20 +62,14 @@ const DashboardScreen = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Main Stats Card */}
-                <View style={styles.mainStatsCard}>
-                    <View style={styles.statsInfo}>
-                        <Text style={styles.statsLabel}>Votre Progression</Text>
-                        <Text style={styles.statsTitle}>Niveau {user.level || 1}</Text>
+              
 
-                        <View style={styles.xpBarContainer}>
-                            <View style={[styles.xpBarFill, { width: `${(user.xp / user.nextLevelXp) * 100}%` }]} />
-                        </View>
-                        <Text style={styles.xpText}>{user.xp} / {user.nextLevelXp} XP</Text>
-                    </View>
-                    <View style={styles.xpBadge}>
-                        <MaterialCommunityIcons name="trophy" size={32} color={Colors.white} />
-                    </View>
+                {/* Daily Activity Quote */}
+                <View style={styles.quoteCard}>
+                    <MaterialCommunityIcons name="format-quote-open" size={24} color={Colors.primary} />
+                    <Text style={styles.quoteText}>
+                        "La seule mauvaise séance d'entraînement est celle que vous n'avez pas faite."
+                    </Text>
                 </View>
 
                 {/* Exercise Summary Grid */}
@@ -124,17 +118,10 @@ const DashboardScreen = ({ navigation }) => {
                     ))}
                 </View>
 
-                {/* Daily Activity Quote or Extra Info */}
-                <View style={styles.quoteCard}>
-                    <MaterialCommunityIcons name="format-quote-open" size={24} color={Colors.primary} />
-                    <Text style={styles.quoteText}>
-                        "La seule mauvaise séance d'entraînement est celle que vous n'avez pas faite."
-                    </Text>
-                </View>
 
                 <View style={{ height: 30 }} />
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 
