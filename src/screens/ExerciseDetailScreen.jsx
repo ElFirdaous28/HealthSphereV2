@@ -6,6 +6,7 @@ import {
     ScrollView,
     TouchableOpacity,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -17,7 +18,8 @@ const ExerciseDetailScreen = ({ route, navigation }) => {
     const { id } = route.params || {};
     const [exercise, setExercise] = useState(null);
     const [loading, setLoading] = useState(true);
-    const { state, toggleFavorite } = useExercises();
+    const [sessionStartTime, setSessionStartTime] = useState(null);
+    const { state, toggleFavorite, completeExercise } = useExercises();
     
     const isFavorite = state.favorites.some(f => f.id === id);
 
@@ -78,6 +80,16 @@ const ExerciseDetailScreen = ({ route, navigation }) => {
             case 'advanced': return Colors.advancedBg;
             default: return Colors.background;
         }
+    };
+
+    const handleStartWorkout = () => {
+        setSessionStartTime(new Date().toISOString());
+    };
+
+    const handleDoneWorkout = async () => {
+        await completeExercise(exercise, sessionStartTime);
+        setSessionStartTime(null);
+        Alert.alert('Done', 'Exercise added to your history.');
     };
 
     if (loading) {
@@ -163,11 +175,21 @@ const ExerciseDetailScreen = ({ route, navigation }) => {
                         <Text style={styles.description}>{exercise.description}</Text>
                     </View>
 
-                    {/* Start Button */}
-                    <TouchableOpacity style={styles.startButton}>
-                        <Text style={styles.startButtonText}>Start Workout</Text>
-                        <MaterialCommunityIcons name="arrow-right" size={20} color={Colors.white} />
-                    </TouchableOpacity>
+                    {/* Workout Action */}
+                    {!sessionStartTime ? (
+                        <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
+                            <Text style={styles.startButtonText}>Start Workout</Text>
+                            <MaterialCommunityIcons name="arrow-right" size={20} color={Colors.white} />
+                        </TouchableOpacity>
+                    ) : (
+                        <>
+                            <Text style={styles.sessionText}>Workout in progress...</Text>
+                            <TouchableOpacity style={styles.doneButton} onPress={handleDoneWorkout}>
+                                <Text style={styles.startButtonText}>Mark as Done</Text>
+                                <MaterialCommunityIcons name="check" size={20} color={Colors.white} />
+                            </TouchableOpacity>
+                        </>
+                    )}
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -322,6 +344,27 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 4,
+    },
+    doneButton: {
+        backgroundColor: Colors.secondary,
+        height: 56,
+        borderRadius: 16,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 8,
+        shadowColor: Colors.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 8,
+        elevation: 4,
+    },
+    sessionText: {
+        fontSize: 13,
+        color: Colors.textLight,
+        fontWeight: '600',
+        textAlign: 'center',
+        marginBottom: 10,
     },
     startButtonText: {
         color: Colors.white,

@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native';
 import DashboardScreen from '../screens/DashboardScreen';
 import ExercisesStackNavigator from './ExercisesStackNavigator';
 import FavoritesStackNavigator from './FavoritesStackNavigator';
+import HistoryStackNavigator from './HistoryStackNavigator';
 import { Colors } from '../constants/Colors';
 
 const Tab = createBottomTabNavigator();
@@ -29,6 +30,8 @@ export default function TabNavigator() {
                         iconName = 'dumbbell';
                     } else if (route.name === 'Favorites') {
                         iconName = 'heart';
+                    } else if (route.name === 'History') {
+                        iconName = 'history';
                     }
                     return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
                 },
@@ -47,6 +50,7 @@ export default function TabNavigator() {
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
             <Tab.Screen name="Exercises" component={ExercisesStackNavigator} />
             <Tab.Screen name="Favorites" component={FavoritesStackNavigator} />
+            <Tab.Screen name="History" component={HistoryStackNavigator} />
         </Tab.Navigator>
     );
 }

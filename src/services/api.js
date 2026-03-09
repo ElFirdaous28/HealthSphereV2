@@ -59,6 +59,24 @@ export const removeFavorite = async (id) => {
     }
 };
 
+export const getHistory = async () => {
+    try {
+        const response = await api.get('/history');
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to fetch history');
+    }
+};
+
+export const addHistoryEntry = async (entry) => {
+    try {
+        const response = await api.post('/history', entry);
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to add history entry');
+    }
+};
+
 // User Endpoints
 export const getUser = async () => {
     try {

@@ -67,6 +67,73 @@
       "duration": 5
     }
   ],
+  "history": [
+    {
+      "id": "1",
+      "exerciseId": "2",
+      "exerciseName": "Plank",
+      "category": "Core",
+      "difficulty": "Beginner",
+      "duration": 5,
+      "calories": 40,
+      "startTime": "2026-03-08T19:12:00.000Z",
+      "endTime": "2026-03-08T19:20:00.000Z",
+      "day": "3/8/2026",
+      "completedAt": "2026-03-08T19:20:00.000Z"
+    },
+    {
+      "id": "2",
+      "exerciseId": "4",
+      "exerciseName": "Burpees",
+      "category": "Cardio",
+      "difficulty": "Intermediate",
+      "duration": 10,
+      "calories": 80,
+      "startTime": "2026-03-07T16:55:00.000Z",
+      "endTime": "2026-03-07T17:05:00.000Z",
+      "day": "3/7/2026",
+      "completedAt": "2026-03-07T17:05:00.000Z"
+    },
+    {
+      "id": "fb67",
+      "exerciseId": "3",
+      "exerciseName": "Squats",
+      "category": "Strength",
+      "difficulty": "Beginner",
+      "duration": 15,
+      "calories": 120,
+      "startTime": "2026-03-09T13:53:29.633Z",
+      "endTime": "2026-03-09T14:08:29.633Z",
+      "day": "3/9/2026",
+      "completedAt": "2026-03-09T14:08:29.633Z"
+    },
+    {
+      "id": "8569",
+      "exerciseId": "2",
+      "exerciseName": "Plank",
+      "category": "Core",
+      "difficulty": "Beginner",
+      "duration": 5,
+      "calories": 40,
+      "startTime": "2026-03-09T14:12:45.939Z",
+      "endTime": "2026-03-09T14:12:52.520Z",
+      "day": "3/9/2026",
+      "completedAt": "2026-03-09T14:12:52.520Z"
+    },
+    {
+      "id": "58a3",
+      "exerciseId": "1",
+      "exerciseName": "Push-ups",
+      "category": "Strength",
+      "difficulty": "Beginner",
+      "duration": 10,
+      "calories": 80,
+      "startTime": "2026-03-09T14:16:52.122Z",
+      "endTime": "2026-03-09T14:16:54.244Z",
+      "day": "2026-03-09",
+      "completedAt": "2026-03-09T14:16:54.244Z"
+    }
+  ],
   "user": {
     "id": "1",
     "name": "meriem",
