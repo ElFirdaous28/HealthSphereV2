@@ -4,6 +4,7 @@ import TabNavigator from './TabNavigator';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AboutScreen from '../screens/AboutScreen';
+import { Colors } from '../constants/Colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -18,17 +19,23 @@ export default function DrawerNavigator() {
     return (
         <Drawer.Navigator
             screenOptions={({ route }) => ({
+                drawerActiveTintColor: Colors.primary,
+                drawerInactiveTintColor: Colors.textLight,
+                drawerLabelStyle: {
+                    fontWeight: '700',
+                    fontSize: 15,
+                },
                 drawerIcon: ({ color, size }) => (
-                    <MaterialCommunityIcons 
-                        name={iconMap[route.name]} 
-                        size={size} 
-                        color={color} 
+                    <MaterialCommunityIcons
+                        name={iconMap[route.name]}
+                        size={size}
+                        color={color}
                     />
                 ),
             })}
         >
-            <Drawer.Screen 
-                name="Home" 
+            <Drawer.Screen
+                name="Home"
                 component={TabNavigator}
                 options={{ headerShown: false }}
             />

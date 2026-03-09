@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native';
 import DashboardScreen from '../screens/DashboardScreen';
 import ExercisesScreen from '../screens/ExercisesScreen';
 import HistoryScreen from '../screens/HistoryScreen';
+import { Colors } from '../constants/Colors';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +18,7 @@ export default function TabNavigator() {
                         onPress={() => navigation.openDrawer()}
                         style={{ marginLeft: 16 }}
                     >
-                        <MaterialCommunityIcons name="menu" size={28} color="#333" />
+                        <MaterialCommunityIcons name="menu" size={28} color={Colors.text} />
                     </TouchableOpacity>
                 ),
                 tabBarIcon: ({ color, size }) => {
@@ -31,8 +32,16 @@ export default function TabNavigator() {
                     }
                     return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
                 },
-                tabBarActiveTintColor: '#007AFF',
-                tabBarInactiveTintColor: '#888',
+                tabBarActiveTintColor: Colors.primary,
+                tabBarInactiveTintColor: Colors.textLight,
+                tabBarStyle: {
+                    borderTopWidth: 0,
+                    elevation: 10,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: -4 },
+                    shadowOpacity: 0.05,
+                    shadowRadius: 10,
+                }
             })}
         >
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
