@@ -7,12 +7,15 @@ import {
   Switch,
   Image,
   ScrollView,
-  SafeAreaView,
+  Dimensions,
   StatusBar,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUser } from '../context/UserContext';
 import { Colors } from '../constants/Colors';
+
+const { width } = Dimensions.get('window');
 
 const SettingsScreen = ({ navigation }) => {
   const { user, loading } = useUser();

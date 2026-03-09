@@ -5,11 +5,11 @@ import {
     View,
     ScrollView,
     TouchableOpacity,
-    SafeAreaView,
     StatusBar,
     Image,
     Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useUser } from '../context/UserContext';
 import { useExercises } from '../context/ExercisesContext';
@@ -141,7 +141,7 @@ const DashboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.bgLight || '#F8F9FE',
+        backgroundColor: Colors.bgLight,
     },
     centerContainer: {
         flex: 1,

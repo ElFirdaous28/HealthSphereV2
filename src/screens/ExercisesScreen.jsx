@@ -6,7 +6,6 @@ import {
     TouchableOpacity,
     TextInput,
     FlatList,
-    SafeAreaView,
     StatusBar,
     ActivityIndicator,
     RefreshControl,
@@ -16,6 +15,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useExercises } from '../context/ExercisesContext';
 import ExerciseCard from '../components/ExerciseCard';
 import { Colors } from '../constants/Colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CATEGORIES = [
     { id: 'all', name: 'All' },

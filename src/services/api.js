@@ -1,12 +1,15 @@
 import axios from 'axios';
 import { Platform } from 'react-native';
 
-// Use localhost for web, and the network IP for real devices
-// Note: json-server runs on port 3001, not the Expo port (8082)
-const devIp = '192.168.1.99';
-const BASE_URL = Platform.OS === 'web'
-    ? 'http://127.0.0.1:3001'
-    : (process.env.API_URL || `http://${devIp}:3001`);
+// Override with EXPO_PUBLIC_API_URL (or API_URL), otherwise use emulator-safe defaults.
+const fallbackBaseUrl = Platform.select({
+    web: 'http://127.0.0.1:3001',
+    android: 'http://10.0.2.2:3001',
+    ios: 'http://localhost:3001',
+    default: 'http://127.0.0.1:3001',
+});
+
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL || fallbackBaseUrl;
 
 const api = axios.create({
     baseURL: BASE_URL,
