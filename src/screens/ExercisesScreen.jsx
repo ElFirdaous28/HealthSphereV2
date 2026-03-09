@@ -15,6 +15,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useExercises } from '../context/ExercisesContext';
 import ExerciseCard from '../components/ExerciseCard';
+import { Colors } from '../constants/Colors';
 
 const CATEGORIES = [
     { id: 'all', name: 'All' },
@@ -58,17 +59,17 @@ const ExercisesScreen = ({ navigation }) => {
             {/* Search Bar */}
             <View style={styles.searchSection}>
                 <View style={styles.searchWrapper}>
-                    <MaterialCommunityIcons name="magnify" size={22} color="#9CA3AF" style={styles.searchIcon} />
+                    <MaterialCommunityIcons name="magnify" size={22} color={Colors.textLight} style={styles.searchIcon} />
                     <TextInput
                         style={styles.searchInput}
                         placeholder="Search exercises, muscles..."
                         value={searchQuery}
                         onChangeText={setSearchQuery}
-                        placeholderTextColor="#9CA3AF"
+                        placeholderTextColor={Colors.textLight}
                     />
                     <View style={styles.divider} />
                     <TouchableOpacity style={styles.filterBarButton}>
-                        <MaterialCommunityIcons name="tune-variant" size={20} color="#4B5563" />
+                        <MaterialCommunityIcons name="tune-variant" size={20} color={Colors.textLight} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -102,7 +103,7 @@ const ExercisesScreen = ({ navigation }) => {
 
     const renderEmpty = () => (
         <View style={styles.noResults}>
-            <MaterialCommunityIcons name="alert-circle-outline" size={48} color="#D1D5DB" />
+            <MaterialCommunityIcons name="alert-circle-outline" size={48} color={Colors.border} />
             <Text style={styles.noResultsText}>No exercises found</Text>
         </View>
     );
@@ -110,7 +111,7 @@ const ExercisesScreen = ({ navigation }) => {
     if (state.loading && state.exercises.length === 0) {
         return (
             <View style={styles.centerContainer}>
-                <ActivityIndicator size="large" color="#9B59B6" />
+                <ActivityIndicator size="large" color={Colors.primary} />
             </View>
         );
     }
@@ -125,13 +126,13 @@ const ExercisesScreen = ({ navigation }) => {
                     style={styles.circleButton}
                     onPress={() => navigation?.goBack()}
                 >
-                    <MaterialCommunityIcons name="chevron-left" size={28} color="#111827" />
+                    <MaterialCommunityIcons name="chevron-left" size={28} color={Colors.text} />
                 </TouchableOpacity>
 
                 <Text style={styles.topNavTitle}>Exercise Library</Text>
 
                 <TouchableOpacity style={styles.circleButton}>
-                    <MaterialCommunityIcons name="dots-horizontal" size={24} color="#111827" />
+                    <MaterialCommunityIcons name="dots-horizontal" size={24} color={Colors.text} />
                 </TouchableOpacity>
             </View>
 
@@ -152,8 +153,8 @@ const ExercisesScreen = ({ navigation }) => {
                     <RefreshControl
                         refreshing={refreshing}
                         onRefresh={onRefresh}
-                        colors={['#9B59B6']}
-                        tintColor="#9B59B6"
+                        colors={[Colors.primary]}
+                        tintColor={Colors.primary}
                     />
                 }
                 showsVerticalScrollIndicator={false}
@@ -165,7 +166,7 @@ const ExercisesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F9FAFB', // Light gray background for better contrast
+        backgroundColor: Colors.background,
     },
     centerContainer: {
         flex: 1,
@@ -178,13 +179,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 20,
         height: 80,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Colors.white,
     },
     circleButton: {
         width: 44,
         height: 44,
         borderRadius: 22,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Colors.white,
         justifyContent: 'center',
         alignItems: 'center',
         // Shadow for premium look
@@ -197,11 +198,11 @@ const styles = StyleSheet.create({
     topNavTitle: {
         fontSize: 18,
         fontWeight: '800',
-        color: '#111827',
+        color: Colors.text,
     },
     listHeader: {
         paddingTop: 10,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Colors.white,
         borderBottomLeftRadius: 32,
         borderBottomRightRadius: 32,
         marginBottom: 20,
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     searchWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F3F4F6',
+        backgroundColor: Colors.background,
         borderRadius: 18,
         paddingHorizontal: 16,
         height: 52,
@@ -230,13 +231,13 @@ const styles = StyleSheet.create({
     searchInput: {
         flex: 1,
         fontSize: 15,
-        color: '#111827',
+        color: Colors.text,
         fontWeight: '500',
     },
     divider: {
         width: 1,
         height: 20,
-        backgroundColor: '#D1D5DB',
+        backgroundColor: Colors.border,
         marginHorizontal: 12,
     },
     filterBarButton: {
@@ -257,10 +258,10 @@ const styles = StyleSheet.create({
     categoryTabText: {
         fontSize: 15,
         fontWeight: '600',
-        color: '#9CA3AF',
+        color: Colors.textLight,
     },
     activeCategoryTabText: {
-        color: '#111827',
+        color: Colors.text,
         fontWeight: '800',
     },
     activeIndicator: {
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
         bottom: 4,
         width: 20,
         height: 3,
-        backgroundColor: '#2ECC71',
+        backgroundColor: Colors.primary,
         borderRadius: 2,
     },
     listContainer: {
@@ -281,7 +282,7 @@ const styles = StyleSheet.create({
     },
     noResultsText: {
         fontSize: 16,
-        color: '#9CA3AF',
+        color: Colors.textLight,
         marginTop: 12,
         fontWeight: '600',
     },

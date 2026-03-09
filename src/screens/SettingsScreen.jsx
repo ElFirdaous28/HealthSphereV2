@@ -8,16 +8,26 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  Dimensions,
+  StatusBar,
 } from 'react-native';
-
-const { width } = Dimensions.get('window');
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useUser } from '../context/UserContext';
+import { Colors } from '../constants/Colors';
 
 const SettingsScreen = ({ navigation }) => {
+  const { user, loading } = useUser();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [pushNotifications, setPushNotifications] = useState(true);
 
-  const SettingItem = ({ icon: Icon, label, value, onToggle, isToggle, onPress }) => (
+  if (loading || !user) {
+    return (
+      <View style={styles.centerContainer}>
+        <Text>Loading Settings...</Text>
+      </View>
+    );
+  }
+
+  const SettingItem = ({ icon, label, value, onToggle, isToggle, onPress, color = Colors.primary }) => (
     <TouchableOpacity
       style={styles.settingItem}
       onPress={onPress}
@@ -25,8 +35,8 @@ const SettingsScreen = ({ navigation }) => {
       activeOpacity={0.7}
     >
       <View style={styles.settingLeft}>
-        <View style={styles.iconContainer}>
-          <Text style={styles.iconText}>{Icon}</Text>
+        <View style={[styles.iconContainer, { backgroundColor: `${color}15` }]}>
+          <MaterialCommunityIcons name={icon} size={22} color={color} />
         </View>
         <Text style={styles.settingLabel}>{label}</Text>
       </View>
@@ -34,25 +44,31 @@ const SettingsScreen = ({ navigation }) => {
         <Switch
           value={value}
           onValueChange={onToggle}
-          trackColor={{ false: '#E0E0E0', true: '#9C27B0' }}
-          thumbColor="#FFFFFF"
+          trackColor={{ false: Colors.border, true: Colors.primary }}
+          thumbColor={Colors.white}
         />
       ) : (
-        <Text style={styles.chevron}>›</Text>
+        <MaterialCommunityIcons name="chevron-right" size={24} color={Colors.border} />
       )}
     </TouchableOpacity>
   );
 
-
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
+      <StatusBar barStyle="dark-content" />
+
+      {/* Premium Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation?.goBack()} style={styles.backButton}>
-          <Text style={styles.backButtonText}>‹</Text>
+        <TouchableOpacity
+          style={styles.circleButton}
+          onPress={() => navigation?.goBack()}
+        >
+          <MaterialCommunityIcons name="chevron-left" size={28} color={Colors.text} />
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>Settings</Text>
-        <View style={styles.headerRight} />
+
+        <View style={styles.placeholder} />
       </View>
 
       <ScrollView
@@ -60,33 +76,34 @@ const SettingsScreen = ({ navigation }) => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Profile Card */}
-        <View style={styles.profileCard}>
-          <View style={styles.avatarContainer}>
-            <Image
-              source={{ uri: 'https://i.pravatar.cc/150?u=alex' }}
-              style={styles.avatar}
-            />
-            <View style={styles.statusDot} />
-          </View>
+        {/* Profile Card Summary */}
+        <TouchableOpacity
+          style={styles.profileCard}
+          onPress={() => navigation?.navigate('Profile')}
+        >
+          <Image
+            source={{ uri: user.avatar }}
+            style={styles.avatar}
+          />
           <View style={styles.profileTextContainer}>
-            <Text style={styles.profileName}>Alex Johnson</Text>
-            <Text style={styles.profileSub}>Pro Member • Level 24</Text>
+            <Text style={styles.profileName}>{user.name}</Text>
+            <Text style={styles.profileSub}> {user.email}</Text>
           </View>
-        </View>
+          <MaterialCommunityIcons name="chevron-right" size={24} color={Colors.textLight} />
+        </TouchableOpacity>
 
         {/* Display & Sound Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>DISPLAY & SOUND</Text>
+          <Text style={styles.sectionTitle}>APPEARANCE & NOTIFICATIONS</Text>
           <SettingItem
-            icon="🌙"
+            icon="weather-night"
             label="Dark Mode"
             isToggle
             value={isDarkMode}
             onToggle={setIsDarkMode}
           />
           <SettingItem
-            icon="🔔"
+            icon="bell-outline"
             label="Push Notifications"
             isToggle
             value={pushNotifications}
@@ -94,41 +111,35 @@ const SettingsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Account & Data Section */}
+        {/* Account Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>ACCOUNT & DATA</Text>
+          <Text style={styles.sectionTitle}>ACCOUNT</Text>
           <SettingItem
-            icon="👤"
+            icon="account-outline"
             label="Profile Details"
+            onPress={() => navigation?.navigate('Profile')}
+          />
+          <SettingItem
+            icon="shield-check-outline"
+            label="Privacy & Security"
             onPress={() => { }}
           />
           <SettingItem
-            icon="🏋️"
-            label="Fitness Goals"
+            icon="help-circle-outline"
+            label="Help & Support"
             onPress={() => { }}
           />
-        </View>
-
-        {/* Sync Button */}
-        <TouchableOpacity style={styles.syncButton}>
-          <Text style={styles.syncIcon}>🔄</Text>
-          <Text style={styles.syncButtonText}>Synchronize Data</Text>
-        </TouchableOpacity>
-
-        {/* App Version */}
-        <View style={styles.versionContainer}>
-          <View style={styles.versionBadge}>
-            <Text style={styles.versionInfoIcon}>ℹ️</Text>
-            <Text style={styles.versionText}>App Version 1.0.1</Text>
-          </View>
         </View>
 
         {/* Log Out */}
         <TouchableOpacity style={styles.logoutButton}>
+          <MaterialCommunityIcons name="logout" size={20} color={Colors.accent} />
           <Text style={styles.logoutText}>Log Out</Text>
         </TouchableOpacity>
-      </ScrollView>
 
+        {/* version */}
+        <Text style={styles.versionText}>HealthSphere V2 • Version 1.2.0</Text>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -136,33 +147,41 @@ const SettingsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.white,
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    backgroundColor: '#FFFFFF',
-    height: 60,
+    height: 80,
+    backgroundColor: Colors.white,
   },
-  backButton: {
-    width: 40,
-    height: 40,
+  circleButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.white,
     justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  backButtonText: {
-    fontSize: 32,
-    color: '#9C27B0',
-    fontWeight: '300',
+  placeholder: {
+    width: 44,
   },
   headerTitle: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1A1A1A',
-  },
-  headerRight: {
-    width: 40,
+    fontWeight: '800',
+    color: Colors.text,
   },
   scrollView: {
     flex: 1,
@@ -170,63 +189,53 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 20,
+    paddingBottom: 40,
   },
   profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F7F9FF',
+    backgroundColor: Colors.background,
     padding: 16,
-    borderRadius: 16,
-    marginBottom: 24,
-  },
-  avatarContainer: {
-    position: 'relative',
+    borderRadius: 24,
+    marginBottom: 32,
   },
   avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-  },
-  statusDot: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: '#4CAF50',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     borderWidth: 2,
-    borderColor: '#F7F9FF',
+    borderColor: Colors.white,
   },
   profileTextContainer: {
+    flex: 1,
     marginLeft: 16,
   },
   profileName: {
     fontSize: 18,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontWeight: '800',
+    color: Colors.text,
   },
   profileSub: {
-    fontSize: 14,
-    color: '#757575',
+    fontSize: 13,
+    color: Colors.textLight,
     marginTop: 2,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 32,
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: '700',
-    color: '#9E9E9E',
-    letterSpacing: 1.2,
+    fontWeight: '800',
+    color: Colors.textLight,
+    letterSpacing: 1.5,
     marginBottom: 16,
+    marginLeft: 4,
   },
   settingItem: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    height: 56,
+    height: 64,
     marginBottom: 8,
   },
   settingLeft: {
@@ -234,79 +243,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
-    backgroundColor: '#F3E5F5',
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
   },
-  iconText: {
-    fontSize: 20,
-  },
   settingLabel: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1A1A1A',
+    color: Colors.text,
   },
-  chevron: {
-    fontSize: 24,
-    color: '#BDBDBD',
-  },
-  syncButton: {
+  logoutButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     height: 56,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#9C27B0',
-    marginBottom: 32,
-    marginTop: 8,
-  },
-  syncIcon: {
-    fontSize: 18,
-    marginRight: 8,
-    color: '#9C27B0',
-  },
-  syncButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#9C27B0',
-  },
-  versionContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  versionBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F7FB',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  versionInfoIcon: {
-    fontSize: 12,
-    marginRight: 6,
-    color: '#90A4AE',
-  },
-  versionText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#90A4AE',
-  },
-  logoutButton: {
-    alignItems: 'center',
-    marginBottom: 40,
+    borderRadius: 16,
+    backgroundColor: Colors.advancedBg,
+    marginTop: 20,
   },
   logoutText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#FF5252',
+    color: Colors.accent,
+    marginLeft: 8,
+  },
+  versionText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: Colors.textLight,
+    marginTop: 32,
+    fontWeight: '500',
   },
 });
 
 export default SettingsScreen;
-

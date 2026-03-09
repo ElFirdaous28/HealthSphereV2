@@ -15,7 +15,6 @@ const api = axios.create({
 export const fetchExercises = async () => {
     try {
         const response = await api.get('/exercises');
-
         return response.data;
     } catch (error) {
         throw new Error('Failed to fetch exercises');
@@ -54,5 +53,24 @@ export const removeFavorite = async (id) => {
         await api.delete(`/favorites/${id}`);
     } catch (error) {
         throw new Error('Failed to remove favorite');
+    }
+};
+
+// User Endpoints
+export const getUser = async () => {
+    try {
+        const response = await api.get('/user');
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to fetch user');
+    }
+};
+
+export const updateUser = async (userData) => {
+    try {
+        const response = await api.put('/user', userData);
+        return response.data;
+    } catch (error) {
+        throw new Error('Failed to update user');
     }
 };

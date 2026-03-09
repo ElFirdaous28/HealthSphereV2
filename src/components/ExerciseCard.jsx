@@ -1,23 +1,27 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { Colors } from '../constants/Colors';
 
 const ExerciseCard = ({ exercise, isFavorite, onToggleFavorite }) => {
+    const navigation = useNavigation();
+
     const getDifficultyColor = (level) => {
         switch (level?.toLowerCase()) {
-            case 'beginner': return '#2ECC71';
-            case 'intermediate': return '#3498DB';
-            case 'advanced': return '#E74C3C';
-            default: return '#95A5A6';
+            case 'beginner': return Colors.beginner;
+            case 'intermediate': return Colors.intermediate;
+            case 'advanced': return Colors.advanced;
+            default: return Colors.textLight;
         }
     };
 
     const getDifficultyBg = (level) => {
         switch (level?.toLowerCase()) {
-            case 'beginner': return '#E8F8F5';
-            case 'intermediate': return '#EBF5FB';
-            case 'advanced': return '#FDEDEC';
-            default: return '#F2F4F4';
+            case 'beginner': return Colors.beginnerBg;
+            case 'intermediate': return Colors.intermediateBg;
+            case 'advanced': return Colors.advancedBg;
+            default: return Colors.background;
         }
     };
 
@@ -32,24 +36,28 @@ const ExerciseCard = ({ exercise, isFavorite, onToggleFavorite }) => {
 
     const getCategoryBg = (category) => {
         switch (category) {
-            case 'Strength': return '#F0F4FF';
-            case 'Core': return '#FFF3E0';
-            case 'Cardio': return '#FCE4EC';
-            default: return '#F3F4F6';
+            case 'Strength': return Colors.strengthBg;
+            case 'Core': return Colors.coreBg;
+            case 'Cardio': return Colors.cardioBg;
+            default: return Colors.background;
         }
     };
 
     const getCategoryColor = (category) => {
         switch (category) {
-            case 'Strength': return '#4A90E2';
-            case 'Core': return '#FF9800';
-            case 'Cardio': return '#E91E63';
-            default: return '#6B7280';
+            case 'Strength': return Colors.strength;
+            case 'Core': return Colors.core;
+            case 'Cardio': return Colors.cardio;
+            default: return Colors.textLight;
         }
     };
 
     return (
-        <View style={styles.card}>
+        <TouchableOpacity
+            style={styles.card}
+            activeOpacity={0.9}
+            onPress={() => navigation.navigate('ExerciseDetail', { id: exercise.id, name: exercise.name })}
+        >
             <View style={[styles.iconContainer, { backgroundColor: getCategoryBg(exercise.category) }]}>
                 <MaterialCommunityIcons
                     name={getCategoryIcon(exercise.category)}
@@ -63,9 +71,9 @@ const ExerciseCard = ({ exercise, isFavorite, onToggleFavorite }) => {
                     <Text style={styles.exerciseName} numberOfLines={2}>{exercise.name}</Text>
                     <TouchableOpacity onPress={() => onToggleFavorite(exercise)} style={styles.favoriteButton}>
                         <MaterialCommunityIcons
-                            name={isFavorite ? "heart" : "heart"}
+                            name={isFavorite ? "heart" : "heart-outline"}
                             size={22}
-                            color={isFavorite ? "#9B59B6" : "#D1D5DB"}
+                            color={isFavorite ? Colors.primary : Colors.border}
                         />
                     </TouchableOpacity>
                 </View>
@@ -78,19 +86,19 @@ const ExerciseCard = ({ exercise, isFavorite, onToggleFavorite }) => {
                     </View>
 
                     <View style={styles.durationContainer}>
-                        <MaterialCommunityIcons name="clock-outline" size={16} color="#9CA3AF" />
+                        <MaterialCommunityIcons name="clock-outline" size={16} color={Colors.textLight} />
                         <Text style={styles.durationText}>{exercise.duration} mins</Text>
                     </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
     card: {
         flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: Colors.white,
         borderRadius: 24,
         padding: 12,
         marginBottom: 16,
@@ -124,7 +132,7 @@ const styles = StyleSheet.create({
     exerciseName: {
         fontSize: 17,
         fontWeight: '700',
-        color: '#111827',
+        color: Colors.text,
         flex: 1,
         marginRight: 8,
         lineHeight: 22,
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
     },
     durationText: {
         fontSize: 13,
-        color: '#6B7280',
+        color: Colors.textLight,
         fontWeight: '600',
         marginLeft: 4,
     },

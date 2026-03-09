@@ -5,6 +5,8 @@ import TabNavigator from './TabNavigator';
 import ProfileScreen from '../screens/ProfileScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AboutScreen from '../screens/AboutScreen';
+import ExerciseDetailScreen from '../screens/ExerciseDetailScreen';
+import { Colors } from '../constants/Colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -13,6 +15,13 @@ export default function AppNavigator() {
         <NavigationContainer>
             <Drawer.Navigator
                 screenOptions={({ route }) => ({
+                    headerTintColor: Colors.primary,
+                    drawerActiveTintColor: Colors.primary,
+                    drawerInactiveTintColor: Colors.textLight,
+                    drawerLabelStyle: {
+                        fontWeight: '700',
+                        fontSize: 15,
+                    },
                     drawerIcon: ({ color, size }) => {
                         let iconName;
                         if (route.name === 'Home') {
@@ -24,7 +33,7 @@ export default function AppNavigator() {
                         } else if (route.name === 'About') {
                             iconName = 'information';
                         }
-                        return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+                        return iconName ? <MaterialCommunityIcons name={iconName} size={size} color={color} /> : null;
                     },
                 })}
             >
@@ -32,6 +41,16 @@ export default function AppNavigator() {
                 <Drawer.Screen name="Profile" component={ProfileScreen} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
                 <Drawer.Screen name="About" component={AboutScreen} />
+
+                {/* Hidden Route for Detail Navigation */}
+                <Drawer.Screen
+                    name="ExerciseDetail"
+                    component={ExerciseDetailScreen}
+                    options={{
+                        drawerItemStyle: { display: 'none' },
+                        title: 'Exercise Detail'
+                    }}
+                />
             </Drawer.Navigator>
         </NavigationContainer>
     );
