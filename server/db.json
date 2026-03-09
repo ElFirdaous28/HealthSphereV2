@@ -59,12 +59,12 @@
       "duration": 10
     },
     {
-      "id": "5",
-      "name": "Pull-ups",
-      "category": "Strength",
-      "difficulty": "Advanced",
-      "description": "Upper body pulling exercise targeting back and biceps.",
-      "duration": 10
+      "id": "2",
+      "name": "Plank",
+      "category": "Core",
+      "difficulty": "Beginner",
+      "description": "Isometric core exercise that builds stability and endurance.",
+      "duration": 5
     }
   ],
   "user": {

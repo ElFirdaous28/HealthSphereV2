@@ -110,7 +110,10 @@ const DashboardScreen = ({ navigation }) => {
                         <TouchableOpacity
                             key={exercise.id}
                             style={styles.exerciseRow}
-                            onPress={() => navigation.navigate('ExerciseDetail', { id: exercise.id, name: exercise.name })}
+                            onPress={() => navigation.navigate('Exercises', { 
+                                screen: 'ExerciseDetail', 
+                                params: { id: exercise.id, name: exercise.name } 
+                            })}
                         >
                             <View style={[styles.exerciseIcon, { backgroundColor: Colors.statusBg }]}>
                                 <MaterialCommunityIcons name="lightning-bolt" size={20} color={Colors.secondary} />

@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import DashboardScreen from '../screens/DashboardScreen';
-import ExercisesScreen from '../screens/ExercisesScreen';
+import ExercisesStackNavigator from './ExercisesStackNavigator';
 import HistoryScreen from '../screens/HistoryScreen';
 import { Colors } from '../constants/Colors';
 
@@ -45,7 +45,7 @@ export default function TabNavigator() {
             })}
         >
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
-            <Tab.Screen name="Exercises" component={ExercisesScreen} />
+            <Tab.Screen name="Exercises" component={ExercisesStackNavigator} />
             <Tab.Screen name="History" component={HistoryScreen} />
         </Tab.Navigator>
     );
