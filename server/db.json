@@ -1,63 +1,63 @@
 {
-  "exercises": [
-    {
-      "id": "1",
-      "name": "Push-ups",
-      "category": "Strength",
-      "difficulty": "Beginner",
-      "description": "Classic upper body exercise targeting chest, shoulders and triceps.",
-      "duration": 10
-    },
-    {
-      "id": "2",
-      "name": "Plank",
-      "category": "Core",
-      "difficulty": "Beginner",
-      "description": "Isometric core exercise that builds stability and endurance.",
-      "duration": 5
-    },
-    {
-      "id": "3",
-      "name": "Squats",
-      "category": "Strength",
-      "difficulty": "Beginner",
-      "description": "Compound lower body movement targeting quads, glutes and hamstrings.",
-      "duration": 15
-    },
-    {
-      "id": "4",
-      "name": "Burpees",
-      "category": "Cardio",
-      "difficulty": "Intermediate",
-      "description": "Full-body exercise combining squat, push-up and jump.",
-      "duration": 10
-    },
-    {
-      "id": "5",
-      "name": "Pull-ups",
-      "category": "Strength",
-      "difficulty": "Advanced",
-      "description": "Upper body pulling exercise targeting back and biceps.",
-      "duration": 10
-    }
-  ],
-  "favorites": [
-    {
-      "id": "3",
-      "name": "Squats",
-      "category": "Strength",
-      "difficulty": "Beginner",
-      "description": "Compound lower body movement targeting quads, glutes and hamstrings.",
-      "duration": 15
-    },
-    {
-      "id": "4",
-      "name": "Burpees",
-      "category": "Cardio",
-      "difficulty": "Intermediate",
-      "description": "Full-body exercise combining squat, push-up and jump.",
-      "duration": 10
-    }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+    "exercises": [
+        {
+            "id": "1",
+            "name": "Push-ups",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "description": "Classic upper body exercise targeting chest, shoulders and triceps.",
+            "duration": 10
+        },
+        {
+            "id": "2",
+            "name": "Plank",
+            "category": "Core",
+            "difficulty": "Beginner",
+            "description": "Isometric core exercise that builds stability and endurance.",
+            "duration": 5
+        },
+        {
+            "id": "3",
+            "name": "Squats",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "description": "Compound lower body movement targeting quads, glutes and hamstrings.",
+            "duration": 15
+        },
+        {
+            "id": "4",
+            "name": "Burpees",
+            "category": "Cardio",
+            "difficulty": "Intermediate",
+            "description": "Full-body exercise combining squat, push-up and jump.",
+            "duration": 10
+        },
+        {
+            "id": "5",
+            "name": "Pull-ups",
+            "category": "Strength",
+            "difficulty": "Advanced",
+            "description": "Upper body pulling exercise targeting back and biceps.",
+            "duration": 10
+        }
+    ],
+    "favorites": [
+        {
+            "id": "3",
+            "name": "Squats",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "description": "Compound lower body movement targeting quads, glutes and hamstrings.",
+            "duration": 15
+        },
+        {
+            "id": "4",
+            "name": "Burpees",
+            "category": "Cardio",
+            "difficulty": "Intermediate",
+            "description": "Full-body exercise combining squat, push-up and jump.",
+            "duration": 10
+        }
+    ],
+    "$schema": "./node_modules/json-server/schema.json"
 }
