@@ -1,6 +1,13 @@
 import axios from 'axios';
+import { Platform } from 'react-native';
 
-const BASE_URL = process.env.API_URL || 'http://192.168.12.210:3001';
+// Use localhost for web, and the network IP for real devices
+// Note: json-server runs on port 3001, not the Expo port (8082)
+const devIp = '192.168.1.99';
+const BASE_URL = Platform.OS === 'web'
+    ? 'http://127.0.0.1:3001'
+    : (process.env.API_URL || `http://${devIp}:3001`);
+
 const api = axios.create({
     baseURL: BASE_URL,
 });
@@ -8,6 +15,7 @@ const api = axios.create({
 export const fetchExercises = async () => {
     try {
         const response = await api.get('/exercises');
+
         return response.data;
     } catch (error) {
         throw new Error('Failed to fetch exercises');

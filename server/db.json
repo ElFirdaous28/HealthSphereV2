@@ -41,5 +41,23 @@
             "duration": 10
         }
     ],
-    "favorites": []
+    "favorites": [
+        {
+            "id": "3",
+            "name": "Squats",
+            "category": "Strength",
+            "difficulty": "Beginner",
+            "description": "Compound lower body movement targeting quads, glutes and hamstrings.",
+            "duration": 15
+        },
+        {
+            "id": "4",
+            "name": "Burpees",
+            "category": "Cardio",
+            "difficulty": "Intermediate",
+            "description": "Full-body exercise combining squat, push-up and jump.",
+            "duration": 10
+        }
+    ],
+    "$schema": "./node_modules/json-server/schema.json"
 }
