@@ -3,7 +3,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import DashboardScreen from '../screens/DashboardScreen';
 import ExercisesStackNavigator from './ExercisesStackNavigator';
-import HistoryScreen from '../screens/HistoryScreen';
+import FavoritesStackNavigator from './FavoritesStackNavigator';
 import { Colors } from '../constants/Colors';
 
 const Tab = createBottomTabNavigator();
@@ -27,8 +27,8 @@ export default function TabNavigator() {
                         iconName = 'home';
                     } else if (route.name === 'Exercises') {
                         iconName = 'dumbbell';
-                    } else if (route.name === 'History') {
-                        iconName = 'history';
+                    } else if (route.name === 'Favorites') {
+                        iconName = 'heart';
                     }
                     return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
                 },
@@ -46,7 +46,7 @@ export default function TabNavigator() {
         >
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
             <Tab.Screen name="Exercises" component={ExercisesStackNavigator} />
-            <Tab.Screen name="History" component={HistoryScreen} />
+            <Tab.Screen name="Favorites" component={FavoritesStackNavigator} />
         </Tab.Navigator>
     );
 }
